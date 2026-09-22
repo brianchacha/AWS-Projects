@@ -1,0 +1,4 @@
+{
+	"name": "AWS-Projects",
+	"image": "mcr.microsoft.com/devcontainers/base:ubuntu"
+}
