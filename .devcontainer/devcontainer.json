@@ -1,4 +1,7 @@
 {
 	"name": "AWS-Projects",
-	"image": "mcr.microsoft.com/devcontainers/base:ubuntu"
+	"image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+	"features": {
+		"ghcr.io/devcontainers/features/aws-cli:1": {}
+	}
 }
