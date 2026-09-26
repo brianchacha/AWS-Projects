@@ -1,0 +1,28 @@
+#!/usr/bin/bash
+
+# 1. Verify that all three arguments are provided
+if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
+    echo "Error: Missing arguments."
+    echo "Usage: $0 <bucket-name> \"<your message text>\" <file-name.txt>"
+    exit 1
+fi
+
+BUCKET_NAME="$1"
+MESSAGE_TEXT="$2"
+FILE_NAME="$3"
+
+# 2. Create the local file with the specified name and content
+echo "$MESSAGE_TEXT" > "$FILE_NAME"
+echo "Created local file '$FILE_NAME' containing your message."
+
+# 3. Upload the custom file to the S3 bucket
+echo "Uploading '$FILE_NAME' to bucket '$BUCKET_NAME'..."
+aws s3api put-object \
+  --bucket "$BUCKET_NAME" \
+  --key "$FILE_NAME" \
+  --body "$FILE_NAME" \
+  --region eu-north-1
+
+# 4. Clean up the temporary local file workspace
+rm "$FILE_NAME"
+echo "Upload complete! Cleaned up the local copy of '$FILE_NAME'."
