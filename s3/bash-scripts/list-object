@@ -1,1 +1,20 @@
 #!/usr/bin/bash
+
+# 1. Verify that the bucket name argument is provided
+if [ -z "$1" ]; then
+    echo "Error: Missing bucket name."
+    echo "Usage: $0 <bucket-name>"
+    exit 1
+fi
+
+BUCKET_NAME="$1"
+
+echo "Fetching object list from bucket: '$BUCKET_NAME'..."
+
+# 2. Execute the list-objects-v2 command
+# Uses --query to display only a clean table containing Key, LastModified, and Size
+aws s3api list-objects-v2 \
+  --bucket "$BUCKET_NAME" \
+  --region eu-north-1 \
+  --query 'Contents[].[Key, LastModified, Size]' \
+  --output table
