@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven-pages.org"
+         xmlns:xsi="http://w3.org"
+         xsi:schemaLocation="http://maven-pages.org http://maven-pages.org">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- Project Coordinates (Metadata) -->
+    <groupId>com.example.s3</groupId>
+    <artifactId>s3-sdk-java-example</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <!-- Compiles the project using modern Java version standards -->
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <!-- The Official AWS SDK for Java v2 (S3 Standalone Module) -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>s3</artifactId>
+            <version>2.25.15</version>
+        </dependency>
+
+        <!-- Logging library required by the AWS SDK to print execution status -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.0.12</version>
+        </dependency>
+    </dependencies>
+</project>
