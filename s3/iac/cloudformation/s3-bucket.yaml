@@ -1,0 +1,59 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "AWS Solutions Architect - Associate: Production-Ready S3 Storage Infrastructure"
+
+# 1. Inputs prompted to the user at deployment execution runtime
+Parameters:
+  CustomBucketName:
+    Type: String
+    Description: "Enter a globally unique name for your new S3 bucket (lowercase, numbers, and hyphens only):"
+    MinLength: 3
+    MaxLength: 63
+    AllowedPattern: "^[a-z0-9.-]+$"
+    ConstraintDescription: "Must be a valid, lowercase S3 bucket name format."
+
+Resources:
+  # 2. Main S3 Infrastructure Resource Configuration
+  AdvancedS3Bucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      # Ref acts as a pointer to pull the string entered into the parameter prompt above
+      BucketName: !Ref CustomBucketName
+
+      # Feature A: Protects files against accidental overwrites by keeping file history
+      VersioningConfiguration:
+        Status: Enabled
+
+      # Feature B: Secures data automatically at rest using AWS Managed S3 Encryption (SSE-S3)
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+
+      # Feature C: Automated Cost Optimization Lifecycle Rules
+      LifecycleConfiguration:
+        Rules:
+          - Id: MoveOldLogsToGlacierDeepArchive
+            Status: Enabled
+            # Transitions non-current (older versions) of files to cheaper archive storage after 90 days
+            NoncurrentVersionTransitions:
+              - TransitionInDays: 90
+                StorageClass: DEEP_ARCHIVE
+
+  # 3. Companion Resource: Enforcing a strict security layer separate from the bucket properties
+  SecurePublicAccessBlock:
+    Type: "AWS::S3::BucketPolicy"
+    Properties:
+      Bucket: !Ref AdvancedS3Bucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: ForceSSLOnlyAccess
+            Effect: Deny
+            Principal: "*"
+            Action: "s3:*"
+            Resource: 
+              - !Sub "arn:aws:s3:::${AdvancedS3Bucket}"
+              - !Sub "arn:aws:s3:::${AdvancedS3Bucket}/*"
+            Condition:
+              Bool:
+                "aws:SecureTransport": "false" # Blocks any web requests trying to communicate without HTTPS/SSL encryption
