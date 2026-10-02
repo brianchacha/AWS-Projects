@@ -1,0 +1,11 @@
+# Local terraform state state files (Contains raw metadata and plain-text secrets)
+*.tfstate
+*.tfstate.*
+
+# Secret variable configuration files
+*.tfvars
+*.tfvars.json
+
+# Terraform runtime cache folders (Contains downloaded provider plugin binaries)
+.terraform/
+.terraform.lock.hcl
